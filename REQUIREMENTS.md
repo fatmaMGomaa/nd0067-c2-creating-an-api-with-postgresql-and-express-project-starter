@@ -6,37 +6,52 @@ These are the notes from a meeting with the frontend developer that describe wha
 ## API Endpoints
 #### Products
 - Index 
-- Show
+    get "/products"
+- Show 
+    get "/products/:id"
 - Create [token required]
+    post "/products?name=product_name&price=product_price"
 - [OPTIONAL] Top 5 most popular products 
 - [OPTIONAL] Products by category (args: product category)
 
 #### Users
 - Index [token required]
+    get "/users"
 - Show [token required]
+    get "/users/:id"
 - Create N[token required]
+    post "/users?firstName=firstName&lastName=lastName&email=user_email&password=password"
 
 #### Orders
 - Current Order by user (args: user id)[token required]
+    get "/orders?user_id=user_id"
 - [OPTIONAL] Completed Orders by user (args: user id)[token required]
+    get "/orders?user_id=user_id&status=completed"
 
-## Data Shapes
+## Database Schema
 #### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+** CREATE TABLE products (id SERIAL PRIMARY KEY, name VARCHAR(100), price numeric(5, 2) NOT NULL DEFAULT 0);
+-  id => SERIAL PRIMARY KEY
+- namefirstName => VARCHAR(100)
+- price => numeric
 
 #### User
-- id
-- firstName
-- lastName
-- password
+** CREATE TABLE users (id SERIAL PRIMARY KEY, first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, email VARCHAR NOT NULL, password_digest VARCHAR NOT NULL);
+- id => SERIAL PRIMARY KEY
+- firstName => VARCHAR(100)
+- lastName => VARCHAR(100)
+- password => VARCHAR
 
 #### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+**  CREATE TYPE order_status AS ENUM ('active', 'pending', 'completed', 'canceled');
+CREATE TABLE orders (id SERIAL PRIMARY KEY, status order_status NOT Null, user_id bigint REFERENCES users(id));
+- id => SERIAL PRIMARY KEY
+- user_id => bigint foreign_key
+- status of order (active or complete) => Enum
 
+#### OrderProducts
+** CREATE TABLE order_products ( id SERIAL PRIMARY KEY, quantity integer, order_id bigint REFERENCES orders(id), product_id bigint REFERENCES products(id) );
+- id => SERIAL PRIMARY KEY
+- product_id => bigint foreign_key
+- order_id => bigint foreign_key
+- product_quantity => integer

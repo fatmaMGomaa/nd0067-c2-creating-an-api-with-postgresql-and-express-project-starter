@@ -52,3 +52,24 @@ Add JWT functionality as shown in the course. Make sure that JWTs are required f
 Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
 
 Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+
+## How To Connect Database
+- we should create databases from psql
+  - psql postgres
+  - CREATE DATABASE fatma_products_dev;
+  - CREATE DATABASE fatma_products_test;
+  - CREATE USER fgomaa with encrypted password '*****';
+  - grant all privileges on database fatma_products_dev to fgomaa;
+  - grant all privileges on database fatma_products_test to fgomaa;
+  - \l (to make sure all databases were created)
+  - \c fatma_products_dev (to connect fatma_products_dev dataase)
+  - \q (to get out of psql)
+- .env file should include the following variables
+    PORT=3000 (backend port)
+    POSTGRES_HOST=localhost (database port)
+    DB_NAME=fatma_products_dev
+    POSTGRES_USER=fgomaa
+    POSTGRES_USER_PASSWORD=*****
+    ENV=dev
+    TEST_DB_NAME=fatma_products_test
+- In database.ts file we created a pool to use it to connect with our databases
