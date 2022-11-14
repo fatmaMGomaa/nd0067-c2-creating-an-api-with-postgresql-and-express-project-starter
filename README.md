@@ -73,3 +73,4 @@ Before submitting your project, spin it up and test each endpoint. If each one r
     ENV=dev
     TEST_DB_NAME=fatma_products_test
 - In database.ts file we created a pool to use it to connect with our databases
+- run yarn migrate to create tables

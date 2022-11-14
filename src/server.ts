@@ -1,28 +1,17 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
-
-import pool, { config } from './database';
+import { config } from './database';
+import products_routes from './handlers/products';
+import users_routes from './handlers/users';
+import orders_routes from './handlers/orders';
 
 const app: express.Application = express();
 
 app.use(bodyParser.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from Fatma World!');
-});
-
-pool.connect().then((client) => {
-  return client
-    .query('SELECT NOW()')
-    .then((res) => {
-      client.release();
-      console.log(res.rows);
-    })
-    .catch((err) => {
-      client.release();
-      console.log(err.message);
-    });
-});
+products_routes(app);
+users_routes(app);
+orders_routes(app);
 
 app.listen(config.PORT, () => {
   console.log(`starting app on: ${config.PORT}`);

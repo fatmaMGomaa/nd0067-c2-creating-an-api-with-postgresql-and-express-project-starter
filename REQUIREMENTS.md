@@ -10,7 +10,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show 
     get "/products/:id"
 - Create [token required]
-    post "/products?name=product_name&price=product_price"
+    post "/products"
 - [OPTIONAL] Top 5 most popular products 
 - [OPTIONAL] Products by category (args: product category)
 
@@ -20,7 +20,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show [token required]
     get "/users/:id"
 - Create N[token required]
-    post "/users?firstName=firstName&lastName=lastName&email=user_email&password=password"
+    post "/users"
 
 #### Orders
 - Current Order by user (args: user id)[token required]
@@ -32,7 +32,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Product
 ** CREATE TABLE products (id SERIAL PRIMARY KEY, name VARCHAR(100), price numeric(5, 2) NOT NULL DEFAULT 0);
 -  id => SERIAL PRIMARY KEY
-- namefirstName => VARCHAR(100)
+- name => VARCHAR(100)
 - price => numeric
 
 #### User
@@ -40,7 +40,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id => SERIAL PRIMARY KEY
 - firstName => VARCHAR(100)
 - lastName => VARCHAR(100)
-- password => VARCHAR
+- email => VARCHAR
+- password_digest => VARCHAR
 
 #### Orders
 **  CREATE TYPE order_status AS ENUM ('active', 'pending', 'completed', 'canceled');

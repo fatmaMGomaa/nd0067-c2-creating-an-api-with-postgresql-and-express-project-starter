@@ -1,16 +1,18 @@
 import pool from '../database';
 
-export type Product = {
+export type User = {
   id?: number;
-  name: string;
-  price: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password_digest: string;
 };
 
-export class ProductStore {
-  async index(): Promise<Product[]> {
+export class UserStore {
+  async index(): Promise<User[]> {
     try {
       const conn = await pool.connect();
-      const query = 'SELECT * FROM products';
+      const query = 'SELECT * FROM users';
       const result = await conn.query(query);
       conn.release();
       return result.rows;
@@ -21,49 +23,51 @@ export class ProductStore {
     }
   }
 
-  async show(id: string): Promise<Product[]> {
+  async show(id: string): Promise<User[]> {
     try {
       const conn = await pool.connect();
-      const query = 'SELECT * FROM products WHERE id=($1)';
+      const query = 'SELECT * FROM users WHERE id=($1)';
       const result = await conn.query(query, [id]);
       conn.release();
       return result.rows[0] === undefined
-        ? { message: 'NO product with this ID' }
+        ? { message: 'NO User with this ID' }
         : result.rows[0];
     } catch (error) {
       throw new Error(
-        `something went wrong with fetching product with id: ${id} from database ${error}`
+        `something went wrong with fetching user with id: ${id} from database ${error}`
       );
     }
   }
-  async create(new_product: Product): Promise<Product[]> {
+  async create(new_user: User): Promise<User[]> {
     try {
       const conn = await pool.connect();
       const query =
-        'INSERT INTO products (name, price) VALUES($1, $2) RETURNING *';
+        'INSERT INTO users (first_name, last_name, email, password_digest) VALUES($1, $2, $3, $4) RETURNING *';
       const result = await conn.query(query, [
-        new_product.name,
-        new_product.price,
+        new_user.first_name,
+        new_user.last_name,
+        new_user.email,
+        new_user.password_digest,
       ]);
       conn.release();
       return result.rows[0];
     } catch (error) {
       throw new Error(
-        `something went wrong with creating product ${new_product.name} into the database ${error}`
+        `something went wrong with creating user ${new_user.email} into the database ${error}`
       );
     }
   }
 
-  async delete(id: string): Promise<Product[]> {
+  async delete(id: string): Promise<User[]> {
     try {
       const conn = await pool.connect();
-      const query = 'DELETE FROM products WHERE id=($1)';
+      const query = 'DELETE FROM users WHERE id=($1)';
       const result = await conn.query(query, [id]);
       conn.release();
       return result.rows[0];
     } catch (error) {
       throw new Error(
-        `something went wrong with deleting product with id: ${id} from database ${error}`
+        `something went wrong with deleting user with id: ${id} from database ${error}`
       );
     }
   }

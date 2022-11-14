@@ -10,7 +10,8 @@
     "tsc": "tsc",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "lint": "eslint . --ext .ts",
-    "formatting": "npm run prettier && npm run lint"
+    "formatting": "yarn prettier && yarn lint",
+    "migrate": "db-migrate up"
   },
   "author": "Udacity",
   "license": "ISC",
