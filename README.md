@@ -72,5 +72,8 @@ Before submitting your project, spin it up and test each endpoint. If each one r
     POSTGRES_USER_PASSWORD=*****
     ENV=dev
     TEST_DB_NAME=fatma_products_test
+    FRONTEND_URL=http://localhost:3000
 - In database.ts file we created a pool to use it to connect with our databases
-- run yarn migrate to create tables
+- npm install -g db-migrate
+- yarn install
+- yarn migrate to create tables

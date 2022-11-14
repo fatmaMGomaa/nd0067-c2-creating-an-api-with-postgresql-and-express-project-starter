@@ -32,7 +32,27 @@ const create = async (req: Request, res: Response) => {
     const added_user = await store.create(p);
     res.json(added_user);
   } catch (err) {
-    res.status(400).json(err);
+    res
+      .status(400)
+      .json({ Error: err, message: 'This email is already existing' });
+  }
+};
+
+const update = async (req: Request, res: Response) => {
+  try {
+    const p: User = {
+      id: req.body.id,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      password_digest: req.body.password,
+    };
+    const updated_user = await store.update(p);
+    res.json(updated_user);
+  } catch (err) {
+    res
+      .status(400)
+      .json({ Error: err, message: 'This email is already existing' });
   }
 };
 
@@ -49,6 +69,7 @@ const users_routes = (app: express.Application) => {
   app.get('/users', index);
   app.get('/users/:id', show);
   app.post('/users', create);
+  app.patch('/users', update);
   app.delete('/users', destroy);
 };
 

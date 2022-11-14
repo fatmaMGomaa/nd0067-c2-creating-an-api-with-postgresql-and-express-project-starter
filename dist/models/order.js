@@ -83,7 +83,9 @@ var OrderStore = /** @class */ (function () {
                     case 2:
                         result = _a.sent();
                         conn.release();
-                        return [2 /*return*/, result.rows[0] === undefined ? { "message": "NO order with this ID" } : result.rows[0]];
+                        return [2 /*return*/, result.rows[0] === undefined
+                                ? { message: 'NO order with this ID' }
+                                : result.rows[0]];
                     case 3:
                         error_2 = _a.sent();
                         throw new Error("something went wrong with fetching order with id: ".concat(id, " from database ").concat(error_2));

@@ -12,7 +12,7 @@ export class UserStore {
   async index(): Promise<User[]> {
     try {
       const conn = await pool.connect();
-      const query = 'SELECT * FROM users';
+      const query = 'SELECT id, email, first_name, last_name FROM users';
       const result = await conn.query(query);
       conn.release();
       return result.rows;
@@ -23,10 +23,11 @@ export class UserStore {
     }
   }
 
-  async show(id: string): Promise<User[]> {
+  async show(id: string): Promise<User> {
     try {
       const conn = await pool.connect();
-      const query = 'SELECT * FROM users WHERE id=($1)';
+      const query =
+        'SELECT id, email, first_name, last_name FROM users WHERE id=($1)';
       const result = await conn.query(query, [id]);
       conn.release();
       return result.rows[0] === undefined
@@ -38,11 +39,11 @@ export class UserStore {
       );
     }
   }
-  async create(new_user: User): Promise<User[]> {
+  async create(new_user: User): Promise<User> {
     try {
       const conn = await pool.connect();
       const query =
-        'INSERT INTO users (first_name, last_name, email, password_digest) VALUES($1, $2, $3, $4) RETURNING *';
+        'INSERT INTO users (first_name, last_name, email, password_digest) VALUES($1, $2, $3, $4) RETURNING id, email, first_name, last_name';
       const result = await conn.query(query, [
         new_user.first_name,
         new_user.last_name,
@@ -58,7 +59,27 @@ export class UserStore {
     }
   }
 
-  async delete(id: string): Promise<User[]> {
+  async update(updated_user: User): Promise<User> {
+    try {
+      const conn = await pool.connect();
+      const query =
+        'UPDATE users SET first_name=$2, last_name=$3, email=$4, password_digest=$5 WHERE id=$1 RETURNING id, email, first_name, last_name';
+      const result = await conn.query(query, [
+        updated_user.first_name,
+        updated_user.last_name,
+        updated_user.email,
+        updated_user.password_digest,
+      ]);
+      conn.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `something went wrong with creating user ${updated_user.email} into the database ${error}`
+      );
+    }
+  }
+
+  async delete(id: string): Promise<User> {
     try {
       const conn = await pool.connect();
       const query = 'DELETE FROM users WHERE id=($1)';

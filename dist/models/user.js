@@ -54,7 +54,7 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        query = 'SELECT * FROM users';
+                        query = 'SELECT id, email, first_name, last_name FROM users';
                         return [4 /*yield*/, conn.query(query)];
                     case 2:
                         result = _a.sent();
@@ -78,13 +78,14 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        query = 'SELECT * FROM users WHERE id=($1)';
+                        query = 'SELECT id, email, first_name, last_name FROM users WHERE id=($1)';
                         return [4 /*yield*/, conn.query(query, [id])];
                     case 2:
                         result = _a.sent();
                         conn.release();
-                        console.log(result.rows[0]);
-                        return [2 /*return*/, result.rows[0] === undefined ? { "message": "NO User with this ID" } : result.rows[0]];
+                        return [2 /*return*/, result.rows[0] === undefined
+                                ? { message: 'NO User with this ID' }
+                                : result.rows[0]];
                     case 3:
                         error_2 = _a.sent();
                         throw new Error("something went wrong with fetching user with id: ".concat(id, " from database ").concat(error_2));
@@ -103,7 +104,7 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1["default"].connect()];
                     case 1:
                         conn = _a.sent();
-                        query = 'INSERT INTO users (first_name, last_name, email, password_digest) VALUES($1, $2, $3, $4) RETURNING *';
+                        query = 'INSERT INTO users (first_name, last_name, email, password_digest) VALUES($1, $2, $3, $4) RETURNING id, email, first_name, last_name';
                         return [4 /*yield*/, conn.query(query, [
                                 new_user.first_name,
                                 new_user.last_name,
@@ -122,9 +123,38 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
-    UserStore.prototype["delete"] = function (id) {
+    UserStore.prototype.update = function (updated_user) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, query, result, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        query = 'UPDATE users SET first_name=$2, last_name=$3, email=$4, password_digest=$5 WHERE id=$1 RETURNING id, email, first_name, last_name';
+                        return [4 /*yield*/, conn.query(query, [
+                                updated_user.first_name,
+                                updated_user.last_name,
+                                updated_user.email,
+                                updated_user.password_digest,
+                            ])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        error_4 = _a.sent();
+                        throw new Error("something went wrong with creating user ".concat(updated_user.email, " into the database ").concat(error_4));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    UserStore.prototype["delete"] = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, query, result, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -139,8 +169,8 @@ var UserStore = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        error_4 = _a.sent();
-                        throw new Error("something went wrong with deleting user with id: ".concat(id, " from database ").concat(error_4));
+                        error_5 = _a.sent();
+                        throw new Error("something went wrong with deleting user with id: ".concat(id, " from database ").concat(error_5));
                     case 4: return [2 /*return*/];
                 }
             });

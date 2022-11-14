@@ -21,7 +21,7 @@ export class OrderStore {
     }
   }
 
-  async show(id: string): Promise<Order[]> {
+  async show(id: string): Promise<Order> {
     try {
       const conn = await pool.connect();
       const query = 'SELECT * FROM orders WHERE id=($1)';
@@ -36,7 +36,7 @@ export class OrderStore {
       );
     }
   }
-  async create(new_order: Order): Promise<Order[]> {
+  async create(new_order: Order): Promise<Order> {
     try {
       const conn = await pool.connect();
       const query =
@@ -54,7 +54,7 @@ export class OrderStore {
     }
   }
 
-  async delete(id: string): Promise<Order[]> {
+  async delete(id: string): Promise<Order> {
     try {
       const conn = await pool.connect();
       const query = 'DELETE FROM orders WHERE id=($1)';

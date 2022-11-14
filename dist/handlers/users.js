@@ -95,14 +95,44 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [3 /*break*/, 3];
             case 2:
                 err_3 = _a.sent();
-                res.status(400).json(err_3);
+                res
+                    .status(400)
+                    .json({ Error: err_3, message: 'This email is already existing' });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var update = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var p, updated_user, err_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                p = {
+                    id: req.body.id,
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    email: req.body.email,
+                    password_digest: req.body.password
+                };
+                return [4 /*yield*/, store.update(p)];
+            case 1:
+                updated_user = _a.sent();
+                res.json(updated_user);
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                res
+                    .status(400)
+                    .json({ Error: err_4, message: 'This email is already existing' });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var deleted_user, err_4;
+    var deleted_user, err_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -113,8 +143,8 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 res.json(deleted_user);
                 return [3 /*break*/, 3];
             case 2:
-                err_4 = _a.sent();
-                res.status(400).json(err_4);
+                err_5 = _a.sent();
+                res.status(400).json(err_5);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -124,6 +154,7 @@ var users_routes = function (app) {
     app.get('/users', index);
     app.get('/users/:id', show);
     app.post('/users', create);
+    app.patch('/users', update);
     app["delete"]('/users', destroy);
 };
 exports["default"] = users_routes;
