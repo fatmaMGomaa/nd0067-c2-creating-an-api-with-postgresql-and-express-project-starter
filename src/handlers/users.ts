@@ -1,5 +1,8 @@
 import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/user';
+import jwt from 'jsonwebtoken';
+import { config } from '../database';
+import verifyAuthToken from '../middlewares/authentication_middleware';
 
 const store = new UserStore();
 
@@ -41,7 +44,7 @@ const create = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   try {
     const p: User = {
-      id: req.body.id,
+      id: parseInt(req.body.id),
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       email: req.body.email,
@@ -50,9 +53,31 @@ const update = async (req: Request, res: Response) => {
     const updated_user = await store.update(p);
     res.json(updated_user);
   } catch (err) {
-    res
-      .status(400)
-      .json({ Error: err, message: 'This email is already existing' });
+    res.status(400).json({
+      Error: err,
+      message: `Could not update user with email ${req.body.email}`,
+    });
+  }
+};
+
+const authenticate = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const auth_user = await store.authenticate(email, password);
+    const token = jwt.sign(
+      { auth_user },
+      config.TOKEN_SECRET as unknown as string
+    );
+    if (auth_user) {
+      res.json({ ...auth_user, token });
+    } else {
+      res.status(401).json({ message: 'Not Authenticated' });
+    }
+  } catch (err) {
+    res.status(401).json({
+      Error: err,
+      message: 'Something went wrong with authentication user',
+    });
   }
 };
 
@@ -66,11 +91,12 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const users_routes = (app: express.Application) => {
-  app.get('/users', index);
-  app.get('/users/:id', show);
+  app.get('/users', verifyAuthToken, index);
+  app.get('/users/:id', verifyAuthToken, show);
   app.post('/users', create);
-  app.patch('/users', update);
-  app.delete('/users', destroy);
+  app.patch('/users', verifyAuthToken, update);
+  app.delete('/users', verifyAuthToken, destroy);
+  app.post('/users/authenticate', authenticate);
 };
 
 export default users_routes;

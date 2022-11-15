@@ -73,6 +73,9 @@ Before submitting your project, spin it up and test each endpoint. If each one r
     ENV=dev
     TEST_DB_NAME=fatma_products_test
     FRONTEND_URL=http://localhost:3000
+    PEPPER=weskyismydog
+    SALT_ROUNDS=10
+    TOKEN_SECRET=weskyismydog
 - In database.ts file we created a pool to use it to connect with our databases
 - npm install -g db-migrate
 - yarn install

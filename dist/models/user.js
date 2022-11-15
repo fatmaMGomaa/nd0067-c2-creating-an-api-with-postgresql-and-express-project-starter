@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,7 +63,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 exports.UserStore = void 0;
-var database_1 = __importDefault(require("../database"));
+var database_1 = __importStar(require("../database"));
+var bcrypt_1 = __importDefault(require("bcrypt"));
+var hashing_password = function (password) {
+    var salt = parseInt(database_1.config.SALT_ROUNDS);
+    var hashed_password = bcrypt_1["default"].hashSync("".concat(password).concat(database_1.config.PEPPER), salt);
+    return hashed_password;
+};
 var UserStore = /** @class */ (function () {
     function UserStore() {
     }
@@ -109,7 +138,7 @@ var UserStore = /** @class */ (function () {
                                 new_user.first_name,
                                 new_user.last_name,
                                 new_user.email,
-                                new_user.password_digest,
+                                hashing_password(new_user.password_digest),
                             ])];
                     case 2:
                         result = _a.sent();
@@ -135,10 +164,11 @@ var UserStore = /** @class */ (function () {
                         conn = _a.sent();
                         query = 'UPDATE users SET first_name=$2, last_name=$3, email=$4, password_digest=$5 WHERE id=$1 RETURNING id, email, first_name, last_name';
                         return [4 /*yield*/, conn.query(query, [
+                                updated_user.id,
                                 updated_user.first_name,
                                 updated_user.last_name,
                                 updated_user.email,
-                                updated_user.password_digest,
+                                hashing_password(updated_user.password_digest),
                             ])];
                     case 2:
                         result = _a.sent();
@@ -146,7 +176,7 @@ var UserStore = /** @class */ (function () {
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         error_4 = _a.sent();
-                        throw new Error("something went wrong with creating user ".concat(updated_user.email, " into the database ").concat(error_4));
+                        throw new Error("something went wrong with updating user ".concat(updated_user.email, " into the database ").concat(error_4));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -171,6 +201,36 @@ var UserStore = /** @class */ (function () {
                     case 3:
                         error_5 = _a.sent();
                         throw new Error("something went wrong with deleting user with id: ".concat(id, " from database ").concat(error_5));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    UserStore.prototype.authenticate = function (email, password) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, user, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = 'SELECT * FROM users WHERE email=($1)';
+                        return [4 /*yield*/, conn.query(sql, [email])];
+                    case 2:
+                        result = _a.sent();
+                        if (result.rows.length) {
+                            user = result.rows[0];
+                            if (bcrypt_1["default"].compareSync("".concat(password).concat(database_1.config.PEPPER), user.password_digest)) {
+                                return [2 /*return*/, user];
+                            }
+                        }
+                        conn.release();
+                        return [2 /*return*/, null];
+                    case 3:
+                        err_1 = _a.sent();
+                        throw new Error("Something went wrong with authentication user with email ".concat(email));
                     case 4: return [2 /*return*/];
                 }
             });

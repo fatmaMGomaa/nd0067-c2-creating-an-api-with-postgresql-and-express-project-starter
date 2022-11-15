@@ -12,6 +12,9 @@ const {
   TEST_DB_NAME,
   PORT,
   FRONTEND_URL,
+  PEPPER,
+  SALT_ROUNDS,
+  TOKEN_SECRET,
 } = process.env;
 
 export const config = {
@@ -23,6 +26,9 @@ export const config = {
   TEST_DB_NAME,
   PORT,
   FRONTEND_URL,
+  PEPPER,
+  SALT_ROUNDS,
+  TOKEN_SECRET,
 };
 
 const pool = new Pool({

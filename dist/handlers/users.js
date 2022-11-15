@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,8 +46,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
 var user_1 = require("../models/user");
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var database_1 = require("../database");
+var authentication_middleware_1 = __importDefault(require("../middlewares/authentication_middleware"));
 var store = new user_1.UserStore();
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var users, err_1;
@@ -110,7 +127,7 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 p = {
-                    id: req.body.id,
+                    id: parseInt(req.body.id),
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
                     email: req.body.email,
@@ -123,16 +140,46 @@ var update = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [3 /*break*/, 3];
             case 2:
                 err_4 = _a.sent();
-                res
-                    .status(400)
-                    .json({ Error: err_4, message: 'This email is already existing' });
+                res.status(400).json({
+                    Error: err_4,
+                    message: "Could not update user with email ".concat(req.body.email)
+                });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, auth_user, token, err_5;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 2, , 3]);
+                _a = req.body, email = _a.email, password = _a.password;
+                return [4 /*yield*/, store.authenticate(email, password)];
+            case 1:
+                auth_user = _b.sent();
+                token = jsonwebtoken_1["default"].sign({ auth_user: auth_user }, database_1.config.TOKEN_SECRET);
+                if (auth_user) {
+                    res.json(__assign(__assign({}, auth_user), { token: token }));
+                }
+                else {
+                    res.status(401).json({ message: 'Not Authenticated' });
+                }
+                return [3 /*break*/, 3];
+            case 2:
+                err_5 = _b.sent();
+                res.status(401).json({
+                    Error: err_5,
+                    message: 'Something went wrong with authentication user'
+                });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var deleted_user, err_5;
+    var deleted_user, err_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -143,18 +190,19 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 res.json(deleted_user);
                 return [3 /*break*/, 3];
             case 2:
-                err_5 = _a.sent();
-                res.status(400).json(err_5);
+                err_6 = _a.sent();
+                res.status(400).json(err_6);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 var users_routes = function (app) {
-    app.get('/users', index);
-    app.get('/users/:id', show);
+    app.get('/users', authentication_middleware_1["default"], index);
+    app.get('/users/:id', authentication_middleware_1["default"], show);
     app.post('/users', create);
-    app.patch('/users', update);
-    app["delete"]('/users', destroy);
+    app.patch('/users', authentication_middleware_1["default"], update);
+    app["delete"]('/users', authentication_middleware_1["default"], destroy);
+    app.post('/users/authenticate', authenticate);
 };
 exports["default"] = users_routes;

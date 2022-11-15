@@ -35,8 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
 var order_1 = require("../models/order");
+var authentication_middleware_1 = __importDefault(require("../middlewares/authentication_middleware"));
 var store = new order_1.OrderStore();
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var orders, err_1;
@@ -119,9 +123,9 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
     });
 }); };
 var orders_routes = function (app) {
-    app.get('/orders', index);
-    app.get('/orders/:id', show);
-    app.post('/orders', create);
-    app["delete"]('/orders', destroy);
+    app.get('/orders', authentication_middleware_1["default"], index);
+    app.get('/orders/:id', authentication_middleware_1["default"], show);
+    app.post('/orders', authentication_middleware_1["default"], create);
+    app["delete"]('/orders', authentication_middleware_1["default"], destroy);
 };
 exports["default"] = orders_routes;

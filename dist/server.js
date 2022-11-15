@@ -13,7 +13,7 @@ var orders_1 = __importDefault(require("./handlers/orders"));
 var app = (0, express_1["default"])();
 var coresOptions = {
     origin: database_1.config.FRONTEND_URL,
-    methods: "GET,PUT,PATCH,POST,DELETE",
+    methods: 'GET,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 200
 };
 app.use((0, cors_1["default"])(coresOptions));

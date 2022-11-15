@@ -9,7 +9,7 @@ import orders_routes from './handlers/orders';
 const app: express.Application = express();
 const coresOptions = {
   origin: config.FRONTEND_URL,
-  methods: "GET,PUT,PATCH,POST,DELETE",
+  methods: 'GET,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 200,
 };
 
