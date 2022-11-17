@@ -23,8 +23,12 @@ These are the notes from a meeting with the frontend developer that describe wha
     post "/users"
 
 #### Orders
+- Getting user's orders ordered by id DESC [token required]
+    get "/orders"
+    * note: Backend will get the user_id during verifyAuthToken middleware
 - Current Order by user (args: user id)[token required]
-    get "/orders?user_id=user_id"
+    * you can call first index and take first order from response then call the following endpoint to list all products in that order
+    get "/orders/:id/products"
 - [OPTIONAL] Completed Orders by user (args: user id)[token required]
     get "/orders?user_id=user_id&status=completed"
 

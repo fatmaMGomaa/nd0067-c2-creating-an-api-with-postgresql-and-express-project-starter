@@ -42,13 +42,14 @@ exports.__esModule = true;
 var order_1 = require("../models/order");
 var authentication_middleware_1 = __importDefault(require("../middlewares/authentication_middleware"));
 var store = new order_1.OrderStore();
-var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orders, err_1;
+var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var user_id, orders, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, store.index()];
+                user_id = req.params.user_id;
+                return [4 /*yield*/, store.index(user_id)];
             case 1:
                 orders = _a.sent();
                 res.json(orders);
@@ -67,7 +68,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, store.show(req.params.id)];
+                return [4 /*yield*/, store.show(req.params.id, req.params.user_id)];
             case 1:
                 order = _a.sent();
                 res.json(order);
@@ -88,7 +89,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 _a.trys.push([0, 2, , 3]);
                 p = {
                     status: 'active',
-                    user_id: req.body.user_id
+                    user_id: req.params.user_id
                 };
                 return [4 /*yield*/, store.create(p)];
             case 1:
@@ -122,10 +123,55 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
         }
     });
 }); };
+var orderProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var order_products, err_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store.orderProducts(req.params.id)];
+            case 1:
+                order_products = _a.sent();
+                res.json(order_products);
+                return [3 /*break*/, 3];
+            case 2:
+                err_5 = _a.sent();
+                res.status(400).json({ err: err_5, message: 'error' });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var p, order_product, err_6;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                p = {
+                    order_id: req.params.id,
+                    product_id: req.body.product_id,
+                    quantity: parseInt(req.body.quantity)
+                };
+                return [4 /*yield*/, store.addProduct(p)];
+            case 1:
+                order_product = _a.sent();
+                res.json(order_product);
+                return [3 /*break*/, 3];
+            case 2:
+                err_6 = _a.sent();
+                res.status(400).json(err_6);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 var orders_routes = function (app) {
     app.get('/orders', authentication_middleware_1["default"], index);
     app.get('/orders/:id', authentication_middleware_1["default"], show);
     app.post('/orders', authentication_middleware_1["default"], create);
     app["delete"]('/orders', authentication_middleware_1["default"], destroy);
+    app.get('/orders/:id/products', authentication_middleware_1["default"], orderProducts);
+    app.post('/orders/:id/products', authentication_middleware_1["default"], addProduct);
 };
 exports["default"] = orders_routes;

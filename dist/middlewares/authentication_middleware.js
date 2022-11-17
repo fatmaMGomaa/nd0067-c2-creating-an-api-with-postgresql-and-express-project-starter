@@ -12,6 +12,7 @@ var verifyAuthToken = function (req, res, next) {
             var token = authorizationHeader.split(' ')[1];
             var decoded = jsonwebtoken_1["default"].verify(token, database_1.config.TOKEN_SECRET);
             if (decoded) {
+                req.params.user_id = decoded.auth_user.id;
                 next();
             }
             else {

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { config } from '../database';
 
 const verifyAuthToken = (req: Request, res: Response, next: NextFunction) => {
@@ -10,8 +10,9 @@ const verifyAuthToken = (req: Request, res: Response, next: NextFunction) => {
       const decoded = jwt.verify(
         token,
         config.TOKEN_SECRET as unknown as string
-      );
+      ) as JwtPayload;
       if (decoded) {
+        req.params.user_id = decoded.auth_user.id;
         next();
       } else {
         res.status(403).json({
