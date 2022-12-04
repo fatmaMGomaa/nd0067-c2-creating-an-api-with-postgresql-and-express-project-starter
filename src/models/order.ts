@@ -44,6 +44,20 @@ export class OrderStore {
     }
   }
 
+  async current(user_id: string): Promise<Order> {
+    try {
+      const conn = await pool.connect();
+      const query = `SELECT * FROM orders WHERE user_id=($1) AND status='active' ORDER BY id DESC LIMIT 1`;
+      const result = await conn.query(query, [user_id]);
+      conn.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `something went wrong with fetching current order from database ${error}`
+      );
+    }
+  }
+
   async create(new_order: Order): Promise<Order> {
     try {
       const conn = await pool.connect();

@@ -81,8 +81,27 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); };
+var current = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var order, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store.current(req.params.user_id)];
+            case 1:
+                order = _a.sent();
+                res.json(order);
+                return [3 /*break*/, 3];
+            case 2:
+                err_3 = _a.sent();
+                res.status(404).json(err_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var p, added_order, err_3;
+    var p, added_order, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -97,15 +116,15 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 res.json(added_order);
                 return [3 /*break*/, 3];
             case 2:
-                err_3 = _a.sent();
-                res.status(400).json(err_3);
+                err_4 = _a.sent();
+                res.status(400).json(err_4);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var deleted_order, err_4;
+    var deleted_order, err_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -116,15 +135,15 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
                 res.json(deleted_order);
                 return [3 /*break*/, 3];
             case 2:
-                err_4 = _a.sent();
-                res.status(400).json(err_4);
+                err_5 = _a.sent();
+                res.status(400).json(err_5);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 var orderProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var order_products, err_5;
+    var order_products, err_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -135,15 +154,15 @@ var orderProducts = function (req, res) { return __awaiter(void 0, void 0, void 
                 res.json(order_products);
                 return [3 /*break*/, 3];
             case 2:
-                err_5 = _a.sent();
-                res.status(400).json({ err: err_5, message: 'error' });
+                err_6 = _a.sent();
+                res.status(400).json({ err: err_6, message: 'error' });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var p, order_product, err_6;
+    var p, order_product, err_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -159,8 +178,8 @@ var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 res.json(order_product);
                 return [3 /*break*/, 3];
             case 2:
-                err_6 = _a.sent();
-                res.status(400).json(err_6);
+                err_7 = _a.sent();
+                res.status(400).json(err_7);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -168,6 +187,7 @@ var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, 
 }); };
 var orders_routes = function (app) {
     app.get('/orders', authentication_middleware_1["default"], index);
+    app.get('/orders/current', authentication_middleware_1["default"], current);
     app.get('/orders/:id', authentication_middleware_1["default"], show);
     app.post('/orders', authentication_middleware_1["default"], create);
     app["delete"]('/orders', authentication_middleware_1["default"], destroy);

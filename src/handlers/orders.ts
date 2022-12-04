@@ -23,6 +23,15 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
+const current = async (req: Request, res: Response) => {
+  try {
+    const order = await store.current(req.params.user_id);
+    res.json(order);
+  } catch (err) {
+    res.status(404).json(err);
+  }
+};
+
 const create = async (req: Request, res: Response) => {
   try {
     const p: Order = {
@@ -70,6 +79,7 @@ const addProduct = async (req: Request, res: Response) => {
 
 const orders_routes = (app: express.Application) => {
   app.get('/orders', verifyAuthToken, index);
+  app.get('/orders/current', verifyAuthToken, current);
   app.get('/orders/:id', verifyAuthToken, show);
   app.post('/orders', verifyAuthToken, create);
   app.delete('/orders', verifyAuthToken, destroy);

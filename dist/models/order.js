@@ -94,9 +94,33 @@ var OrderStore = /** @class */ (function () {
             });
         });
     };
-    OrderStore.prototype.create = function (new_order) {
+    OrderStore.prototype.current = function (user_id) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, query, result, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1["default"].connect()];
+                    case 1:
+                        conn = _a.sent();
+                        query = "SELECT * FROM orders WHERE user_id=($1) AND status='active' ORDER BY id DESC LIMIT 1";
+                        return [4 /*yield*/, conn.query(query, [user_id])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        error_3 = _a.sent();
+                        throw new Error("something went wrong with fetching current order from database ".concat(error_3));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    OrderStore.prototype.create = function (new_order) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, query, result, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -114,8 +138,8 @@ var OrderStore = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        error_3 = _a.sent();
-                        throw new Error("something went wrong with creating new order into the database ".concat(error_3));
+                        error_4 = _a.sent();
+                        throw new Error("something went wrong with creating new order into the database ".concat(error_4));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -123,7 +147,7 @@ var OrderStore = /** @class */ (function () {
     };
     OrderStore.prototype["delete"] = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, query, result, error_4;
+            var conn, query, result, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -138,8 +162,8 @@ var OrderStore = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        error_4 = _a.sent();
-                        throw new Error("something went wrong with deleting order with id: ".concat(id, " from database ").concat(error_4));
+                        error_5 = _a.sent();
+                        throw new Error("something went wrong with deleting order with id: ".concat(id, " from database ").concat(error_5));
                     case 4: return [2 /*return*/];
                 }
             });
