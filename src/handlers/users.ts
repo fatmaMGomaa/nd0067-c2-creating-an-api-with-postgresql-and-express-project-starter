@@ -41,24 +41,24 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const update = async (req: Request, res: Response) => {
-  try {
-    const p: User = {
-      id: parseInt(req.body.id),
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
-      password_digest: req.body.password,
-    };
-    const updated_user = await store.update(p);
-    res.json(updated_user);
-  } catch (err) {
-    res.status(400).json({
-      Error: err,
-      message: `Could not update user with email ${req.body.email}`,
-    });
-  }
-};
+// const update = async (req: Request, res: Response) => {
+//   try {
+//     const p: User = {
+//       id: parseInt(req.body.id),
+//       first_name: req.body.first_name,
+//       last_name: req.body.last_name,
+//       email: req.body.email,
+//       password_digest: req.body.password,
+//     };
+//     const updated_user = await store.update(p);
+//     res.json(updated_user);
+//   } catch (err) {
+//     res.status(400).json({
+//       Error: err,
+//       message: `Could not update user with email ${req.body.email}`,
+//     });
+//   }
+// };
 
 const authenticate = async (req: Request, res: Response) => {
   try {
@@ -81,21 +81,21 @@ const authenticate = async (req: Request, res: Response) => {
   }
 };
 
-const destroy = async (req: Request, res: Response) => {
-  try {
-    const deleted_user = await store.delete(req.body.id);
-    res.json(deleted_user);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-};
+// const destroy = async (req: Request, res: Response) => {
+//   try {
+//     const deleted_user = await store.delete(req.body.id);
+//     res.json(deleted_user);
+//   } catch (err) {
+//     res.status(400).json(err);
+//   }
+// };
 
 const users_routes = (app: express.Application) => {
   app.get('/users', verifyAuthToken, index);
   app.get('/users/:id', verifyAuthToken, show);
   app.post('/users', create);
-  app.patch('/users', verifyAuthToken, update);
-  app.delete('/users', verifyAuthToken, destroy);
+  // app.patch('/users', verifyAuthToken, update);
+  // app.delete('/users', verifyAuthToken, destroy);
   app.post('/users/authenticate', authenticate);
 };
 

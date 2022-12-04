@@ -121,9 +121,7 @@ export class OrderStore {
     }
   }
 
-  async orderProducts(
-    order_id: string
-  ): Promise<
+  async orderProducts(order_id: string): Promise<
     {
       name: string;
       price: number;

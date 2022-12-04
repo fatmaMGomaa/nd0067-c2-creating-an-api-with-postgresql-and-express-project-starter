@@ -19,6 +19,7 @@
     ],
     "rules": {
         "no-var": 2,
-        "no-console": 1
+        "no-console": 1,
+        "@typescript-eslint/ban-ts-comment": 1
     }
 }
