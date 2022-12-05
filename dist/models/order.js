@@ -232,7 +232,6 @@ var OrderStore = /** @class */ (function () {
                         return [2 /*return*/, result.rows];
                     case 3:
                         err_2 = _a.sent();
-                        console.log(err_2);
                         throw new Error("Could not fetch order: " + order_id + "'s products: " + err_2);
                     case 4: return [2 /*return*/];
                 }

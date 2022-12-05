@@ -23,3 +23,5 @@ orders_routes(app);
 app.listen(config.PORT, () => {
   console.log(`starting app on: ${config.PORT}`);
 });
+
+export default app;

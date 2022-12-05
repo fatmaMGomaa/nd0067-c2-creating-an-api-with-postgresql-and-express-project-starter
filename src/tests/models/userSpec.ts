@@ -3,16 +3,6 @@ import { User, UserStore } from '../../models/user';
 const store = new UserStore();
 
 describe('testing user model', () => {
-  beforeAll(async () => {
-    const new_user: User = {
-      first_name: 'fatma',
-      last_name: 'gomaa',
-      email: 'fatmagoma@gmail.com',
-      password_digest: '123456789',
-    };
-    await store.create(new_user);
-  });
-
   it('checking existing of index method', () => {
     expect(store.index).toBeDefined();
   });

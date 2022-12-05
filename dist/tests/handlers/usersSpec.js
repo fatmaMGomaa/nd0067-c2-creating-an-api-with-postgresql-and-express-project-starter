@@ -35,70 +35,86 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var user_1 = require("../../models/user");
-var store = new user_1.UserStore();
-describe('testing user model', function () {
-    it('checking existing of index method', function () {
-        expect(store.index).toBeDefined();
-    });
-    it('checking existing of create method', function () {
-        expect(store.create).toBeDefined();
-    });
-    it('checking existing of show method', function () {
-        expect(store.show).toBeDefined();
-    });
-    it('create method should add a user with email nohagoma@gmail.com', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var new_user, result;
+var supertest_1 = __importDefault(require("supertest"));
+var server_1 = __importDefault(require("../../server"));
+var request = supertest_1.default(server_1.default);
+describe('testing users handler endpoints', function () {
+    var token = '';
+    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    new_user = {
-                        first_name: 'noha',
+                case 0: return [4 /*yield*/, request
+                        .post('/users/authenticate')
+                        .send({ email: 'fatmagoma@gmail.com', password: '123456789' })];
+                case 1:
+                    response = _a.sent();
+                    if (response.body) {
+                        token = response.body.token;
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('checking users index endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .get('/users')
+                        .set('Authorization', "Bearer " + token)];
+                case 1:
+                    response = _a.sent();
+                    expect(response.body).not.toEqual([]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('checking show endpoint for user_id: 1', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .get('/users/1')
+                        .set('Authorization', "Bearer " + token)];
+                case 1:
+                    response = _a.sent();
+                    expect(response.body.id).toEqual(1);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('checking create endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post('/users').send({
+                        first_name: 'radwa',
                         last_name: 'gomaa',
-                        email: 'nohagoma@gmail.com',
-                        password_digest: '123456789',
-                    };
-                    return [4 /*yield*/, store.create(new_user)];
+                        email: 'radwagoma@gmail.com',
+                        password: '55555',
+                    })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.email).toEqual('nohagoma@gmail.com');
+                    response = _a.sent();
+                    expect(response.body.email).toEqual('radwagoma@gmail.com');
                     return [2 /*return*/];
             }
         });
     }); });
-    it('show method should get user with id 1', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
+    it('checking authenticate endpoint for user_id: 1', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.show('1')];
+                case 0: return [4 /*yield*/, request
+                        .post('/users/authenticate')
+                        .send({ email: 'fatmagoma@gmail.com', password: '123456789' })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toEqual(1);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('index method should list all users', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, store.index()];
-                case 1:
-                    result = _a.sent();
-                    expect(result).not.toEqual([]);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('authenticate method should get user with emaill: fatmagoma@gmail.com and password: 123456789', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, store.authenticate('fatmagoma@gmail.com', '11111111')];
-                case 1:
-                    result = _a.sent();
-                    expect(result).toBeNull();
+                    response = _a.sent();
+                    expect(response.body.token).not.toEqual('');
                     return [2 /*return*/];
             }
         });

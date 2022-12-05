@@ -37,52 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var order_1 = require("../../models/order");
-var user_1 = require("../../models/user");
-var product_1 = require("../../models/product");
-var userStore = new user_1.UserStore();
-var productStore = new product_1.ProductStore();
 var store = new order_1.OrderStore();
 describe('testing order model', function () {
-    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var new_user, new_product, new_order, new_order_product;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    new_user = {
-                        first_name: 'amr',
-                        last_name: 'gomaa',
-                        email: 'amrgoma@gmail.com',
-                        password_digest: '999999',
-                    };
-                    return [4 /*yield*/, userStore.create(new_user)];
-                case 1:
-                    _a.sent();
-                    new_product = {
-                        name: 'pepsi',
-                        price: 16,
-                    };
-                    return [4 /*yield*/, productStore.create(new_product)];
-                case 2:
-                    _a.sent();
-                    new_order = {
-                        status: 'active',
-                        user_id: '1',
-                    };
-                    return [4 /*yield*/, store.create(new_order)];
-                case 3:
-                    _a.sent();
-                    new_order_product = {
-                        order_id: '1',
-                        product_id: '1',
-                        quantity: 1,
-                    };
-                    return [4 /*yield*/, store.addProduct(new_order_product)];
-                case 4:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
     it('checking existing of index method', function () {
         expect(store.index).toBeDefined();
     });

@@ -140,7 +140,6 @@ export class OrderStore {
       conn.release();
       return result.rows;
     } catch (err) {
-      console.log(err);
       throw new Error(`Could not fetch order: ${order_id}'s products: ${err}`);
     }
   }

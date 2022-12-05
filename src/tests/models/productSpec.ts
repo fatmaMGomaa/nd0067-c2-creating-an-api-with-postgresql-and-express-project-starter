@@ -3,14 +3,6 @@ import { Product, ProductStore } from '../../models/product';
 const store = new ProductStore();
 
 describe('testing product model', () => {
-  beforeAll(async () => {
-    const new_product: Product = {
-      name: 'pepsi',
-      price: 16,
-    };
-    await store.create(new_product);
-  });
-
   it('checking existing of index method', () => {
     expect(store.index).toBeDefined();
   });
@@ -35,7 +27,7 @@ describe('testing product model', () => {
 
   it('show method should get product with id 1', async () => {
     const result = await store.show('1');
-    expect(result.name).toEqual('pepsi');
+    expect(result.id).toEqual(1);
   });
 
   it('index method should list all products', async () => {

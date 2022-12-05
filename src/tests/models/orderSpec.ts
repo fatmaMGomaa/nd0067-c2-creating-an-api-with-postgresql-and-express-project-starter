@@ -1,41 +1,8 @@
-import { OrderProduct, Order, OrderStore } from '../../models/order';
-import { User, UserStore } from '../../models/user';
-import { Product, ProductStore } from '../../models/product';
+import { OrderProduct, OrderStore } from '../../models/order';
 
-const userStore = new UserStore();
-const productStore = new ProductStore();
 const store = new OrderStore();
 
 describe('testing order model', () => {
-  beforeAll(async () => {
-    const new_user: User = {
-      first_name: 'amr',
-      last_name: 'gomaa',
-      email: 'amrgoma@gmail.com',
-      password_digest: '999999',
-    };
-    await userStore.create(new_user);
-
-    const new_product: Product = {
-      name: 'pepsi',
-      price: 16,
-    };
-    await productStore.create(new_product);
-
-    const new_order: Order = {
-      status: 'active',
-      user_id: '1',
-    };
-    await store.create(new_order);
-
-    const new_order_product: OrderProduct = {
-      order_id: '1',
-      product_id: '1',
-      quantity: 1,
-    };
-    await store.addProduct(new_order_product);
-  });
-
   it('checking existing of index method', () => {
     expect(store.index).toBeDefined();
   });

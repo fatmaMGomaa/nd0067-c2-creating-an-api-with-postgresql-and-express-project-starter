@@ -24,3 +24,4 @@ orders_1.default(app);
 app.listen(database_1.config.PORT, function () {
     console.log("starting app on: " + database_1.config.PORT);
 });
+exports.default = app;

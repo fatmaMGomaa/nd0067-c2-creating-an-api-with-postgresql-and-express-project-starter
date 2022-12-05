@@ -83,5 +83,6 @@ Before submitting your project, spin it up and test each endpoint. If each one r
 
 ## How To Run Tests
 - set ENV=test at .env file
-- run 'yarn start' to up the project from the root directory of the project
+- make sure that the server isn't running to freeup the port for supertest package
 - run 'yarn test' to run tests from the root directory of the project
+- in case the tests were failed, please don't forget to run 'db-migrate --env test reset' before running 'yarn test' again
