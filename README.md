@@ -80,3 +80,8 @@ Before submitting your project, spin it up and test each endpoint. If each one r
 - npm install -g db-migrate
 - yarn install
 - yarn migrate to create tables
+
+## How To Run Tests
+- set ENV=test at .env file
+- run 'yarn start' to up the project from the root directory of the project
+- run 'yarn test' to run tests from the root directory of the project

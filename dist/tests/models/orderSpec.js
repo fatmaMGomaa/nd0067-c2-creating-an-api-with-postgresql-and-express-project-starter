@@ -36,22 +36,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var order_1 = require("../../models/order");
 var user_1 = require("../../models/user");
-var store = new user_1.UserStore();
-describe('testing user model', function () {
+var product_1 = require("../../models/product");
+var userStore = new user_1.UserStore();
+var productStore = new product_1.ProductStore();
+var store = new order_1.OrderStore();
+describe('testing order model', function () {
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var new_user;
+        var new_user, new_product, new_order, new_order_product;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     new_user = {
-                        first_name: 'fatma',
+                        first_name: 'amr',
                         last_name: 'gomaa',
-                        email: 'fatmagoma@gmail.com',
-                        password_digest: '123456789',
+                        email: 'amrgoma@gmail.com',
+                        password_digest: '999999',
                     };
-                    return [4 /*yield*/, store.create(new_user)];
+                    return [4 /*yield*/, userStore.create(new_user)];
                 case 1:
+                    _a.sent();
+                    new_product = {
+                        name: 'pepsi',
+                        price: 16,
+                    };
+                    return [4 /*yield*/, productStore.create(new_product)];
+                case 2:
+                    _a.sent();
+                    new_order = {
+                        status: 'active',
+                        user_id: '1',
+                    };
+                    return [4 /*yield*/, store.create(new_order)];
+                case 3:
+                    _a.sent();
+                    new_order_product = {
+                        order_id: '1',
+                        product_id: '1',
+                        quantity: 1,
+                    };
+                    return [4 /*yield*/, store.addProduct(new_order_product)];
+                case 4:
                     _a.sent();
                     return [2 /*return*/];
             }
@@ -60,48 +86,32 @@ describe('testing user model', function () {
     it('checking existing of index method', function () {
         expect(store.index).toBeDefined();
     });
-    it('checking existing of create method', function () {
-        expect(store.create).toBeDefined();
+    it('checking existing of current method', function () {
+        expect(store.current).toBeDefined();
     });
-    it('checking existing of show method', function () {
-        expect(store.show).toBeDefined();
+    it('checking existing of addProduct method', function () {
+        expect(store.addProduct).toBeDefined();
     });
-    it('create method should add a user with email nohagoma@gmail.com', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var new_user, result;
+    it('checking existing of orderProducts method', function () {
+        expect(store.orderProducts).toBeDefined();
+    });
+    it('current method should get the current active order for user_id: 1', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    new_user = {
-                        first_name: 'noha',
-                        last_name: 'gomaa',
-                        email: 'nohagoma@gmail.com',
-                        password_digest: '123456789',
-                    };
-                    return [4 /*yield*/, store.create(new_user)];
+                case 0: return [4 /*yield*/, store.current('1')];
                 case 1:
                     result = _a.sent();
-                    expect(result.email).toEqual('nohagoma@gmail.com');
+                    expect(result.user_id).toEqual('1');
                     return [2 /*return*/];
             }
         });
     }); });
-    it('show method should get user with id 1', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('index method should list all orders for user_id: 1', function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.show('1')];
-                case 1:
-                    result = _a.sent();
-                    expect(result.id).toEqual(1);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('index method should list all users', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, store.index()];
+                case 0: return [4 /*yield*/, store.index('1')];
                 case 1:
                     result = _a.sent();
                     expect(result).not.toEqual([]);
@@ -109,14 +119,32 @@ describe('testing user model', function () {
             }
         });
     }); });
-    it('authenticate method should get user with emaill: fatmagoma@gmail.com and password: 123456789', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('addProduct method should add product with id: 1 to order with id: 1', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var p, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    p = {
+                        order_id: '1',
+                        product_id: '1',
+                        quantity: 5,
+                    };
+                    return [4 /*yield*/, store.addProduct(p)];
+                case 1:
+                    result = _a.sent();
+                    expect(result.product_id).toEqual('1');
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('orderProducts method should list all products for order_id: 1', function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.authenticate('fatmagoma@gmail.com', '11111111')];
+                case 0: return [4 /*yield*/, store.orderProducts('1')];
                 case 1:
                     result = _a.sent();
-                    expect(result).toBeNull();
+                    expect(result).not.toEqual([]);
                     return [2 /*return*/];
             }
         });
